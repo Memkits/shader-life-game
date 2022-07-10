@@ -3,6 +3,7 @@ import stepperShader from "./glsl/stepper.frag";
 
 const canvasEl = document.getElementById("canvas");
 const gl = canvasEl.getContext("webgl");
+const canvasSize = 1024;
 
 function createShader(ty, src) {
   const s = gl.createShader(ty);
@@ -65,8 +66,8 @@ gl.bufferData(
   gl.STATIC_DRAW
 );
 
-const startState = new Uint8Array(1024 * 1024 * 3);
-for (let i = 0; i < 1024 * 1024; i++) {
+const startState = new Uint8Array(canvasSize * 2 * canvasSize * 3);
+for (let i = 0; i < canvasSize * 2 * canvasSize; i++) {
   const intensity = Math.random() < 0.5 ? 255 : 0;
   startState[i * 3] = intensity;
   startState[i * 3 + 1] = intensity;
@@ -80,8 +81,8 @@ gl.texImage2D(
   gl.TEXTURE_2D,
   0,
   gl.RGB,
-  1024,
-  1024,
+  2 * canvasSize,
+  canvasSize,
   0,
   gl.RGB,
   gl.UNSIGNED_BYTE,
@@ -98,8 +99,8 @@ gl.texImage2D(
   gl.TEXTURE_2D,
   0,
   gl.RGB,
-  1024,
-  1024,
+  2 * canvasSize,
+  canvasSize,
   0,
   gl.RGB,
   gl.UNSIGNED_BYTE,
@@ -149,3 +150,7 @@ function draw() {
   requestAnimationFrame(draw);
 }
 draw();
+
+document.body.addEventListener("click", () => {
+  document.body.requestFullscreen();
+});
